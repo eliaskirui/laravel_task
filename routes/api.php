@@ -19,4 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('/tasks', TaskController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('/tasks', TaskController::class);
+    Route::post('/logout', [\App\Http\Controllers\Api\AuthenticationController::class, 'logout'])->name('auth.logout');
+});
+
+Route::post('/signup', [\App\Http\Controllers\Api\AuthenticationController::class, 'signup'])->name('auth.signup');
+Route::post('/login', [\App\Http\Controllers\Api\AuthenticationController::class, 'login'])->name('auth.login');
